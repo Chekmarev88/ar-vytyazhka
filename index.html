@@ -4,13 +4,11 @@
   <meta charset="utf-8">
   <title>AR Вытяжка</title>
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-  <script src="https://rawgit.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+  <script src="https://unpkg.com/@ar-js-org/ar.js@2.2.3/dist/ar.js"></script>
 </head>
 <body>
-  <a-scene embedded arjs="sourceType: webcam; detectionMode: mono_and_matrix; matrixCodeType: 3x3;">
-    <a-marker preset="hiro">
-      <a-entity gltf-model="url(./vytyazhka.glb)" scale="0.1 0.1 0.1" position="0 0 0"></a-entity>
-    </a-marker>
+  <a-scene embedded arjs="sourceType: webcam; trackingMethod: best;">
+    <a-entity gltf-model="url(./vytyazhka.glb)" scale="0.1 0.1 0.1" position="0 0 -1"></a-entity>
     <a-entity camera></a-entity>
   </a-scene>
 </body>
