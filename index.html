@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Тест Three.js</title>
+  <title>Тест Вытяжки</title>
   <style>
-    body { margin: 0; }
+    body { margin: 0; background: #ccc; }
     canvas { width: 100%; height: 100%; }
   </style>
 </head>
@@ -15,24 +15,31 @@
   <script>
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer();
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
-    const light = new THREE.AmbientLight(0xffffff, 1);
-    scene.add(light);
+    // Свет
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+    scene.add(ambientLight);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    directionalLight.position.set(5, 5, 5);
+    scene.add(directionalLight);
 
+    // Загрузка модели
     const loader = new THREE.GLTFLoader();
     loader.load(
       './vytyazhka.glb',
       function (gltf) {
-        scene.add(gltf.scene);
-        gltf.scene.scale.set(1, 1, 1);
-        gltf.scene.position.set(0, 0, -1);
+        const model = gltf.scene;
+        scene.add(model);
+        model.scale.set(0.5, 0.5, 0.5); // Уменьшим масштаб
+        model.position.set(0, 0, -2);   // Ближе к камере
+        console.log('Модель загружена успешно');
       },
       undefined,
       function (error) {
-        console.error('Ошибка загрузки модели:', error);
+        console.error('Ошибка загрузки:', error);
       }
     );
 
