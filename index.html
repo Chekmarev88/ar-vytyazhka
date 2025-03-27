@@ -2,17 +2,16 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
   <title>AR Вытяжка</title>
   <style>
     body { margin: 0; }
     canvas { width: 100%; height: 100%; }
     #ar-button { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); padding: 10px; background: #fff; border: 1px solid #000; cursor: pointer; }
-    #ar-button:disabled { background: #ccc; cursor: not-allowed; }
   </style>
 </head>
 <body>
-  <button id="ar-button" disabled>Запустить AR</button>
+  <button id="ar-button">Запустить AR</button>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.134/examples/js/loaders/GLTFLoader.js"></script>
   <script>
@@ -30,19 +29,12 @@
 
     let model;
     const loader = new THREE.GLTFLoader();
-    loader.load(
-      './vytyazhka.glb',
-      function (gltf) {
-        model = gltf.scene;
-        model.scale.set(1, 1, 1);
-        model.position.set(0, 0, -1);
-        scene.add(model);
-      },
-      undefined,
-      function (error) {
-        console.error('Ошибка загрузки:', error);
-      }
-    );
+    loader.load('./vytyazhka.glb', (gltf) => {
+      model = gltf.scene;
+      model.scale.set(1, 1, 1);
+      model.position.set(0, 0, -1);
+      scene.add(model);
+    }, undefined, (error) => console.error('Ошибка загрузки:', error));
 
     camera.position.z = 5;
 
@@ -53,29 +45,20 @@
     animate();
 
     const arButton = document.getElementById('ar-button');
-    if ('xr' in navigator) {
-      navigator.xr.isSessionSupported('immersive-ar').then(supported => {
-        if (supported) {
-          arButton.disabled = false;
-          arButton.addEventListener('click', () => {
-            navigator.xr.requestSession('immersive-ar', { requiredFeatures: ['hit-test'] }).then(session => {
-              renderer.xr.setSession(session);
-              arButton.style.display = 'none';
-            }).catch(err => {
-              console.error('Ошибка AR:', err);
-              alert('Не удалось запустить AR: ' + err.message);
-            });
-          });
-        } else {
-          arButton.textContent = 'AR не поддерживается';
-        }
-      }).catch(err => {
-        console.error('Ошибка проверки XR:', err);
-        arButton.textContent = 'AR не работает';
-      });
-    } else {
-      arButton.textContent = 'WebXR не поддерживается';
-    }
+    arButton.addEventListener('click', () => {
+      if ('xr' in navigator) {
+        navigator.xr.requestSession('immersive-ar', { optionalFeatures: ['hit-test'] }).then(session => {
+          renderer.xr.setSession(session);
+          arButton.style.display = 'none';
+          console.log('AR запущен');
+        }).catch(err => {
+          console.error('Ошибка запуска AR:', err);
+          alert('Ошибка: ' + err.message + '. Включи WebXR в настройках Safari.');
+        });
+      } else {
+        alert('WebXR не поддерживается. Используй Safari с включённым WebXR.');
+      }
+    });
   </script>
 </body>
 </html>
