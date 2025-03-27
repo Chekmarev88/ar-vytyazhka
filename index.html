@@ -35,7 +35,7 @@
       './vytyazhka.glb',
       function (gltf) {
         model = gltf.scene;
-        model.scale.set(0.1, 0.1, 0.1); // Подстрой масштаб, если нужно
+        model.scale.set(1, 1, 1); // Подстрой масштаб, если нужно
         model.position.set(0, 0, -1);
         scene.add(model);
       },
