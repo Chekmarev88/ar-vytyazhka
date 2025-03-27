@@ -7,7 +7,7 @@
   <style>
     body { margin: 0; }
     canvas { width: 100%; height: 100%; }
-    #ar-button { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); padding: 10px; }
+    #ar-button { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); padding: 10px; background: #fff; border: 1px solid #000; cursor: pointer; }
   </style>
 </head>
 <body>
@@ -22,18 +22,20 @@
     renderer.xr.enabled = true;
     document.body.appendChild(renderer.domElement);
 
+    // Свет
     scene.add(new THREE.AmbientLight(0xffffff, 0.8));
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
     directionalLight.position.set(5, 5, 5);
     scene.add(directionalLight);
 
-    let model;
+    // Загрузка модели
     const loader = new THREE.GLTFLoader();
+    let model;
     loader.load(
       './vytyazhka.glb',
       function (gltf) {
         model = gltf.scene;
-        model.scale.set(0.1, 0.1, 0.1); // Подбери масштаб
+        model.scale.set(0.1, 0.1, 0.1); // Подстрой масштаб, если нужно
         model.position.set(0, 0, -1);
         scene.add(model);
       },
@@ -53,12 +55,12 @@
 
     const arButton = document.getElementById('ar-button');
     arButton.addEventListener('click', () => {
-      navigator.xr.requestSession('immersive-ar').then(session => {
+      navigator.xr.requestSession('immersive-ar', { requiredFeatures: ['hit-test'] }).then(session => {
         renderer.xr.setSession(session);
         arButton.style.display = 'none';
       }).catch(err => {
         console.error('Ошибка AR:', err);
-        alert('AR не поддерживается или произошла ошибка');
+        alert('Устройство не поддерживает AR или произошла ошибка');
       });
     });
   </script>
