@@ -3,43 +3,39 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Тест Вытяжки</title>
+  <title>AR Вытяжка</title>
   <style>
-    body { margin: 0; background: #ccc; }
+    body { margin: 0; }
     canvas { width: 100%; height: 100%; }
+    #ar-button { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); padding: 10px; }
   </style>
 </head>
 <body>
+  <button id="ar-button">Запустить AR</button>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.134/examples/js/loaders/GLTFLoader.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.134/examples/js/controls/OrbitControls.js"></script>
   <script>
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.xr.enabled = true;
     document.body.appendChild(renderer.domElement);
 
-    // Свет
     scene.add(new THREE.AmbientLight(0xffffff, 0.8));
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
     directionalLight.position.set(5, 5, 5);
     scene.add(directionalLight);
 
-    // Сетка для отладки
-    const gridHelper = new THREE.GridHelper(10, 10);
-    scene.add(gridHelper);
-
-    // Загрузка модели
+    let model;
     const loader = new THREE.GLTFLoader();
     loader.load(
       './vytyazhka.glb',
       function (gltf) {
-        const model = gltf.scene;
+        model = gltf.scene;
+        model.scale.set(0.1, 0.1, 0.1); // Подбери масштаб
+        model.position.set(0, 0, -1);
         scene.add(model);
-        model.scale.set(1, 1, 1); // Пробуем масштаб 1
-        model.position.set(0, 0, 0); // Центр сцены
-        console.log('Модель загружена успешно:', model);
       },
       undefined,
       function (error) {
@@ -47,15 +43,24 @@
       }
     );
 
-    camera.position.set(0, 2, 5); // Камера чуть выше и дальше
-    const controls = new THREE.OrbitControls(camera, renderer.domElement);
-    controls.update();
+    camera.position.z = 5;
 
     function animate() {
       requestAnimationFrame(animate);
       renderer.render(scene, camera);
     }
     animate();
+
+    const arButton = document.getElementById('ar-button');
+    arButton.addEventListener('click', () => {
+      navigator.xr.requestSession('immersive-ar').then(session => {
+        renderer.xr.setSession(session);
+        arButton.style.display = 'none';
+      }).catch(err => {
+        console.error('Ошибка AR:', err);
+        alert('AR не поддерживается или произошла ошибка');
+      });
+    });
   </script>
 </body>
 </html>
