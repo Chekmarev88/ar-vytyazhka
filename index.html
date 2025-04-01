@@ -2,47 +2,21 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>AR Вытяжка</title>
   <style>
-    body { margin: 0; }
-    canvas { width: 100%; height: 100%; }
-    #info { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); color: white; font-size: 16px; text-align: center; }
+    body { margin: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background: #f0f0f0; }
+    p { font-size: 16px; text-align: center; margin: 20px; }
   </style>
 </head>
 <body>
-  <div id="info">Наведите камеру на стену и переместите вытяжку</div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.134/examples/js/loaders/GLTFLoader.js"></script>
+  <p>Наведите камеру на стену и перетащите вытяжку на нужное место</p>
+  <a href="./vytyazhka.usdz" rel="ar" id="ar-link" style="display: none;"></a>
   <script>
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.xr.enabled = true;
-    document.body.appendChild(renderer.domElement);
-
-    scene.add(new THREE.AmbientLight(0xffffff, 0.8));
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-    directionalLight.position.set(5, 5, 5);
-    scene.add(directionalLight);
-
-    let model;
-    const loader = new THREE.GLTFLoader();
-    loader.load('./vytyazhka.glb', (gltf) => {
-      model = gltf.scene;
-      model.scale.set(1, 1, 1);
-      model.position.set(0, 0, -1); // Размещаем перед камерой
-      scene.add(model);
-      console.log('Модель загружена');
-    }, undefined, (error) => console.error('Ошибка загрузки модели:', error));
-
-    async function startAR() {
-      if (!navigator.xr) {
-        document.getElementById('info').textContent = 'WebXR не поддерживается. Включите в настройках Safari.';
-        console.log('WebXR отсутствует');
-        return;
-      }
-
-      try {
-        const session = await navigator.xr.requestSession('
+    window.onload = () => {
+      const link = document.getElementById('ar-link');
+      setTimeout(() => link.click(), 500); // Запуск через 0.5 сек для стабильности
+    };
+  </script>
+</body>
+</html>
