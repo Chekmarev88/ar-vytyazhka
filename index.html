@@ -6,19 +6,16 @@
   <title>AR Вытяжка</title>
   <style>
     body { margin: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background: #f0f0f0; }
-    button { padding: 15px 30px; font-size: 18px; background: #007aff; color: white; border: none; border-radius: 10px; cursor: pointer; }
     p { font-size: 16px; text-align: center; margin: 20px; }
   </style>
 </head>
 <body>
   <p>Наведите камеру на стену и перетащите вытяжку на нужное место</p>
-  <a href="./vytyazhka.usdz" rel="ar">
-    <button>Разместить на стене</button>
-  </a>
+  <a href="./vytyazhka.usdz" rel="ar" id="ar-link" style="display: none;"></a>
   <script>
     window.onload = () => {
-      const link = document.querySelector('a[rel="ar"]');
-      setTimeout(() => link.click(), 1000);
+      const link = document.getElementById('ar-link');
+      setTimeout(() => link.click(), 500); // Запуск через 0.5 сек для стабильности
     };
   </script>
 </body>
