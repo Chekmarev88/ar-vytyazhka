@@ -4,22 +4,21 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>AR Вытяжка</title>
-  <!-- Указываем вертикальное размещение -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
   <style>
-    body { margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f0f0f0; }
+    body { margin: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background: #f0f0f0; }
     button { padding: 15px 30px; font-size: 18px; background: #007aff; color: white; border: none; border-radius: 10px; cursor: pointer; }
+    p { font-size: 16px; text-align: center; margin: 20px; }
   </style>
 </head>
 <body>
-  <a href="./vytyazhka.usdz" rel="ar" ar-placement="wall">
+  <p>Наведите камеру на стену и перетащите вытяжку на нужное место</p>
+  <a href="./vytyazhka.usdz" rel="ar">
     <button>Разместить на стене</button>
   </a>
   <script>
-    // Автоматический запуск AR при загрузке
     window.onload = () => {
       const link = document.querySelector('a[rel="ar"]');
-      setTimeout(() => link.click(), 1000); // Через 1 секунду для стабильности
+      setTimeout(() => link.click(), 1000);
     };
   </script>
 </body>
