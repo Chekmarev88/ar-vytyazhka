@@ -74,7 +74,7 @@
             reticle.quaternion.fromArray(pose.transform.orientation);
             reticle.matrix.fromArray(pose.transform.matrix);
 
-            // Проверяем, вертикальная ли поверхность (стена)
+            // Проверяем, вертикальная ли поверхность (стенаа)
             const normal = new THREE.Vector3(0, 1, 0).applyQuaternion(reticle.quaternion);
             if (Math.abs(normal.y) < 0.5) { // Если не горизонтальная
               model.visible = true;
